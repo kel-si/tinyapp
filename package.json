@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/kel-si/tinyapp/issues"
   },
-  "homepage": "https://github.com/kel-si/tinyapp#readme"
+  "homepage": "https://github.com/kel-si/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
 }
