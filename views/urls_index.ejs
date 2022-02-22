@@ -1,5 +1,4 @@
 <!--receives data to display-->
-<!--need to add href='#' (dead link for shortening new URL)-->
 <!DOCTYPE html>
 <html lang="en>
 <head>
@@ -19,13 +18,20 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>
         <% for(let url in urls) { %>
           <tr>
-            <td><a href="#"><%= url %></a></td>
+            <td><%= url %></td>
             <td><%= urls[url] %></td>
+            <td>
+              <form method="POST" action="/urls/<%= url %>/delete">
+                <button type = "submit">Delete
+                </button>
+              </form>
+            </td>
           </tr>
         <% } %>
       </tbody>
