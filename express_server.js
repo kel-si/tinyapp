@@ -60,6 +60,7 @@ app.listen(PORT, () => {
 //function to return a random string of 6 characters
 function generateRandomString() {
   const randomKey =  Math.random().toString(36).substring(6);
+  return randomKey;
 };
 
 
