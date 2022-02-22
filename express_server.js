@@ -1,13 +1,14 @@
 const express = require("express");
+const res = require("express/lib/response");
 const app = express();
 const PORT = 8080; //default
+
+app.set("view engine", "ejs");
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
-
-app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
   res.send("Hello!")
@@ -29,6 +30,13 @@ app.get("/set", (req, res) => {
 app.get("/fetch", (req, res) => {
   res.send(`a = ${a}`);
 });
+
+app.get("/urls", (req, res) => {
+  const templateVars = {urls: urlDatabase};
+  res.render("urls_index", templateVars);
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
