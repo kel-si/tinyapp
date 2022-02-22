@@ -10,6 +10,8 @@ const res = require("express/lib/response");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+
+//express app to use EJS as its templating engine
 app.set("view engine", "ejs");
 
 const urlDatabase = {
@@ -21,14 +23,17 @@ app.get("/", (req, res) => {
   res.send("Hello!")
 });
 
+//add additional endpoints
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+//sending HTML
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n")
 });
 
+//testing scope
 app.get("/set", (req, res) => {
   const a = 1;
   res.send(`a = ${a}`);
@@ -38,6 +43,7 @@ app.get("/fetch", (req, res) => {
   res.send(`a = ${a}`);
 });
 
+//pass URL data to template
 app.get("/urls", (req, res) => {
   const templateVars = {urls: urlDatabase};
   res.render("urls_index", templateVars);
