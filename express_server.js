@@ -1,8 +1,12 @@
+//create server
 const express = require("express");
-const res = require("express/lib/response");
 const app = express();
 const PORT = 8080; //default
 
+//express
+const res = require("express/lib/response");
+
+//allows for POST requests; adds data to the req object under the key body
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -48,6 +52,7 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+//handles post request (logs and gives a response)
 app.post("/urls", (req, res) => {
   console.log(req.body);
   res.send("Ok");
@@ -57,7 +62,7 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });
 
-//function to return a random string of 6 characters
+//returns a random string of 6 characters
 function generateRandomString() {
   const randomKey =  Math.random().toString(36).substring(6);
   return randomKey;
