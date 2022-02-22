@@ -20,7 +20,7 @@ const urlDatabase = {
 };
 
 app.get("/", (req, res) => {
-  res.send("Hello!")
+  res.send("Hello!");
 });
 
 //add additional endpoints
@@ -30,18 +30,18 @@ app.get("/urls.json", (req, res) => {
 
 //sending HTML
 app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n")
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//testing scope
-app.get("/set", (req, res) => {
-  const a = 1;
-  res.send(`a = ${a}`);
-});
+// //testing scope
+// app.get("/set", (req, res) => {
+//   const a = 1;
+//   res.send(`a = ${a}`);
+// });
 
-app.get("/fetch", (req, res) => {
-  res.send(`a = ${a}`);
-});
+// app.get("/fetch", (req, res) => {
+//   res.send(`a = ${a}`);
+// });
 
 //pass URL data to template
 app.get("/urls", (req, res) => {
@@ -71,16 +71,14 @@ app.post("/urls", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });
 
 //returns a random string of 6 characters
-function generateRandomString() {
+const generateRandomString = function() {
   const randomKey =  Math.random().toString(36).substring(6);
   return randomKey;
 };
-
-
