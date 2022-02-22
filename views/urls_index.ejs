@@ -1,5 +1,5 @@
-//receives data to display
-//need to add href='#' (dead link for shortening new URL)
+<!--receives data to display-->
+<!--need to add href='#' (dead link for shortening new URL)-->
 <!DOCTYPE html>
 <html lang="en>
 <head>
@@ -24,7 +24,7 @@
       <tbody>
         <% for(let url in urls) { %>
           <tr>
-            <td><%= url %></td>
+            <td><a href="#"><%= url %></a></td>
             <td><%= urls[url] %></td>
           </tr>
         <% } %>
