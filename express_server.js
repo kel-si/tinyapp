@@ -57,8 +57,9 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });
 
+//function to return a random string of 6 characters
 function generateRandomString() {
-  return Math.random().toString(36).substring(6);
+  const randomKey =  Math.random().toString(36).substring(6);
 };
 
 console.log(generateRandomString());
