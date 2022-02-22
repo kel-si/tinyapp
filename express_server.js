@@ -49,6 +49,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//to show the form
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -58,10 +59,11 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-//handles post request (logs and gives a response)
+//adds shortURL
 app.post("/urls", (req, res) => {
-  console.log(req.body);
-  res.send("Ok");
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
