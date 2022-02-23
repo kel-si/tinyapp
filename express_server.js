@@ -10,7 +10,9 @@ const res = require("express/lib/response");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+//cookie-parser
 const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 
 //express app to use EJS as its templating engine
@@ -89,9 +91,11 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-//create login
+//create username
 app.post("/login", (req, res) => {
   const username = req.body.username;
+  res.cookie("username", username);
+  res.redirect("/urls");
 });
 
 
