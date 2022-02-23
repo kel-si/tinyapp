@@ -1,4 +1,4 @@
-<!--receives data to display-->
+<!--all URLS-->
 <!DOCTYPE html>
 <html lang="en>
 <head>
@@ -18,6 +18,7 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Edit</th>
           <th scope="col">Delete</th>
         </tr>
       </thead>
@@ -26,6 +27,9 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
+            <td><form action="urls/<%= url %>">
+              <button>Edit
+              </button></td>
             <td>
               <form method="POST" action="/urls/<%= url %>/delete">
                 <button type = "submit">Delete
