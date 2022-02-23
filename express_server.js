@@ -10,6 +10,8 @@ const res = require("express/lib/response");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+const cookieParser = require('cookie-parser');
+
 
 //express app to use EJS as its templating engine
 app.set("view engine", "ejs");
