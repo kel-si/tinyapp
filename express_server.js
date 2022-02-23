@@ -89,6 +89,12 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
+//create login
+app.post("/login", (req, res) => {
+  const username = req.body.username;
+});
+
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });
