@@ -108,8 +108,19 @@ app.get("/register", (req, res) => {
 
 //new register
 app.post("/register", (req, res) => {
-  const email = req.body.email;
   const password = req.body.password;
+  const email = req.body.email;
+
+  const id = generateRandomString();
+  res.cookie("id", id);
+
+  if (users[email]) {
+    res.redirect("/login");
+  }
+
+  const newUser = {id, email, password};
+  users[id] = newUser;
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
@@ -121,3 +132,4 @@ const generateRandomString = function() {
   const randomKey =  Math.random().toString(36).substring(6);
   return randomKey;
 };
+
