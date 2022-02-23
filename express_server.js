@@ -10,17 +10,28 @@ const res = require("express/lib/response");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-//cookie-parser
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-
-//express app to use EJS as its templating engine
+//express app to use EJS templating engine
 app.set("view engine", "ejs");
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
+};
+
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
 };
 
 app.get("/", (req, res) => {
@@ -31,21 +42,6 @@ app.get("/", (req, res) => {
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
-
-//sending HTML
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
-// //testing scope
-// app.get("/set", (req, res) => {
-//   const a = 1;
-//   res.send(`a = ${a}`);
-// });
-
-// app.get("/fetch", (req, res) => {
-//   res.send(`a = ${a}`);
-// });
 
 //pass URL data to template
 app.get("/urls", (req, res) => {
@@ -107,14 +103,14 @@ app.post("/logout", (req, res) => {
 
 //registration page
 app.get("/register", (req, res) => {
-  res.render("register")
+  res.render("register");
 });
 
 //new register
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-})
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
