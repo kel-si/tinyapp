@@ -34,21 +34,19 @@ const users = {
   }
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello!");
+// });
 
-//add additional endpoints
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+// //add additional endpoints
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase);
+// });
 
 //pass URL data to template
 app.get("/urls", (req, res) => {
-
   const userId = req.cookies["user_id"];
   const user = users[userId];
-
   const templateVars = {user, urls: urlDatabase};
   res.render("urls_index", templateVars);
 });
@@ -133,6 +131,15 @@ app.post("/register", (req, res) => {
   const newUser = {id, email, password};
   users[id] = newUser;
   res.redirect("/urls");
+});
+
+//log in
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", (req, res) => {
+  
 });
 
 app.listen(PORT, () => {
