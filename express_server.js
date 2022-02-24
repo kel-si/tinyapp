@@ -125,7 +125,7 @@ app.post("/register", (req, res) => {
     res.status(400).send("Must input email and password.");
   }
 
- if(checkEmail(users, email)) {
+ if(getUserByEmail(users, email)) {
    res.status(400).send("Email already registered.");
  }
 
