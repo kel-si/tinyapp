@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 const cookieParser = require('cookie-parser');
+const { redirect } = require("express/lib/response");
 app.use(cookieParser());
 
 //express app to use EJS templating engine
@@ -94,16 +95,16 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-//create username
-app.post("/login", (req, res) => {
-  const username = req.body.username;
-  res.cookie("username", username);
-  res.redirect("/urls");
-});
+// //create username
+// app.post("/login", (req, res) => {
+//   const username = req.body.username;
+//   res.cookie("username", username);
+//   res.redirect("/urls");
+// });
 
 //logout
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -138,8 +139,27 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+//log in
 app.post("/login", (req, res) => {
+  const password = req.body.password;
+  const email = req.body.email;
+
+  const user = getUserByEmail(users, email);
+
+  if (user === null) {
+    res.status(403).send("Email cannot be found.")
+  };
+
+  const userIdKey = (checkPassword(users, password));
+  console.log(userIdKey);
+    
+    res.cookie("user_id", userIdKey);
+    res.redirect("/urls");
   
+  if (!userIdKey) {
+    res.status(403).send("Password is incorrect.")
+  }
+
 });
 
 app.listen(PORT, () => {
@@ -152,10 +172,19 @@ const generateRandomString = function() {
   return randomKey;
 };
 
-const checkEmail = function (obj, email) {
+const getUserByEmail = function (obj, email) {
   for(let key in obj) {
     if (obj[key].email === email) {
-      return true;
+      return obj[key];
+    }
+  }
+  return null;
+};
+
+const checkPassword = function(obj, password) {
+  for (let key in obj) {
+    if (obj[key].password === password) {
+      return obj[key].id;
     }
   }
   return false;
