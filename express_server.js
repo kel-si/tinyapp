@@ -6,7 +6,7 @@ const PORT = 8080; //default
 //express
 const res = require("express/lib/response");
 
-//allows for POST requests; adds data to the req object under the key body
+//adds data to the req object under the key body
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -14,8 +14,12 @@ const cookieParser = require('cookie-parser');
 const { redirect } = require("express/lib/response");
 app.use(cookieParser());
 
-//express app to use EJS templating engine
+
 app.set("view engine", "ejs");
+
+const getUserByEmail = require("./helpers");
+const checkPassword = require("./helpers");
+const generateRandomString = require("./helpers");
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -151,7 +155,6 @@ app.post("/login", (req, res) => {
   };
 
   const userIdKey = (checkPassword(users, password));
-  console.log(userIdKey);
     
     res.cookie("user_id", userIdKey);
     res.redirect("/urls");
@@ -165,27 +168,3 @@ app.post("/login", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port: ${PORT}`);
 });
-
-//returns a random string of 6 characters
-const generateRandomString = function() {
-  const randomKey =  Math.random().toString(36).substring(6);
-  return randomKey;
-};
-
-const getUserByEmail = function (obj, email) {
-  for(let key in obj) {
-    if (obj[key].email === email) {
-      return obj[key];
-    }
-  }
-  return null;
-};
-
-const checkPassword = function(obj, password) {
-  for (let key in obj) {
-    if (obj[key].password === password) {
-      return obj[key].id;
-    }
-  }
-  return false;
-};
