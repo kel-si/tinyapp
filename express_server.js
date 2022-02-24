@@ -123,12 +123,12 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", id);
 
   if(!email || !password) {
-    res.redirect("/register");
+    res.status(400).send("Must input email and password.");
   }
 
-  if (users[email]) {
-    res.redirect("/login");
-  }
+ if(checkEmail(users, email)) {
+   res.status(400).send("Email already registered.");
+ }
 
   const newUser = {id, email, password};
   users[id] = newUser;
@@ -145,3 +145,11 @@ const generateRandomString = function() {
   return randomKey;
 };
 
+const checkEmail = function (obj, email) {
+  for(let key in obj) {
+    if (obj[key].email === email) {
+      return true;
+    }
+  }
+  return false;
+};
