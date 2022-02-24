@@ -1,6 +1,5 @@
 const { get } = require("express/lib/response");
 
-//returns a random string of 6 characters
 const generateRandomString = function() {
   const randomKey =  Math.random().toString(36).substring(6);
   return randomKey;

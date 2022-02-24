@@ -2,8 +2,6 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; //default
-
-//express
 const res = require("express/lib/response");
 
 //adds data to the req object under the key body
