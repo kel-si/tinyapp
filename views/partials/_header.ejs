@@ -15,12 +15,13 @@
         Logged in as: <%= user.email %>
           <button type = "submit">Log Out</button>
         </form>
-    <% } %>
+    <% } else { %>
     <form method ="GET" action="/login">
       <button type = "submit">Log In</button>
     </form>
     <form method ="GET" action="/register">
       <button type = "submit">Register</button>
+    <% } %>
     </form>
   </nav>
 </header>
