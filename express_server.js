@@ -2,22 +2,17 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; //default
-const res = require("express/lib/response");
+app.set("view engine", "ejs");
 
 //adds data to the req object under the key body
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 const cookieParser = require('cookie-parser');
-const { redirect } = require("express/lib/response");
+const { redirect, res } = require("express/lib/response");
 app.use(cookieParser());
 
-
-app.set("view engine", "ejs");
-
-const getUserByEmail = require("./helpers");
-const checkPassword = require("./helpers");
-const generateRandomString = require("./helpers");
+const {getUserByEmail, checkPassword, generateRandomString} = require("./helpers");
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -97,22 +92,16 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-// //create username
-// app.post("/login", (req, res) => {
-//   const username = req.body.username;
-//   res.cookie("username", username);
-//   res.redirect("/urls");
-// });
-
 //logout
 app.post("/logout", (req, res) => {
+  console.log("foobar1");
   res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
 //registration page
 app.get("/register", (req, res) => {
-  res.render("register");
+  res.render("register", {user: null});
 });
 
 //new register
@@ -120,16 +109,16 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
 
-  const id = generateRandomString();
-  res.cookie("user_id", id);
-
   if(!email || !password) {
-    res.status(400).send("Must input email and password.");
+    return res.status(400).send("Must input email and password.");
   }
 
- if(getUserByEmail(users, email)) {
-   res.status(400).send("Email already registered.");
- }
+  if(getUserByEmail(users, email)) {
+    return res.status(400).send("Email already registered.");
+  }
+
+  const id = generateRandomString();
+  res.cookie("user_id", id);
 
   const newUser = {id, email, password};
   users[id] = newUser;
@@ -138,29 +127,21 @@ app.post("/register", (req, res) => {
 
 //log in
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", {user: null});
 });
 
 //log in
 app.post("/login", (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
-
   const user = getUserByEmail(users, email);
 
-  if (user === null) {
-    res.status(403).send("Email cannot be found.")
+  if (!user || !checkPassword(user, password)) {
+    return res.status(403).send("Email or password cannot be found.")
   };
-
-  const userIdKey = (checkPassword(users, password));
-    
-    res.cookie("user_id", userIdKey);
-    res.redirect("/urls");
   
-  if (!userIdKey) {
-    res.status(403).send("Password is incorrect.")
-  }
-
+  res.cookie("user_id", user.id);
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
