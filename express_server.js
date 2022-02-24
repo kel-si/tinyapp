@@ -1,18 +1,18 @@
-//create server
+const {getUserByEmail, checkPassword, generateRandomString} = require("./helpers");
+const { redirect, res } = require("express/lib/response");
+const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+
 const express = require("express");
 const app = express();
-const PORT = 8080; //default
+const PORT = 8080;
+
 app.set("view engine", "ejs");
 
-//adds data to the req object under the key body
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-
-const cookieParser = require('cookie-parser');
-const { redirect, res } = require("express/lib/response");
 app.use(cookieParser());
 
-const {getUserByEmail, checkPassword, generateRandomString} = require("./helpers");
+//DATABASES:
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -32,14 +32,7 @@ const users = {
   }
 };
 
-// app.get("/", (req, res) => {
-//   res.send("Hello!");
-// });
-
-// //add additional endpoints
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
+//GET METHODS:
 
 //pass URL data to template
 app.get("/urls", (req, res) => {
@@ -64,17 +57,29 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+//redirect to longURL
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
+//registration page
+app.get("/register", (req, res) => {
+  res.render("register", {user: null});
+});
+
+//log in
+app.get("/login", (req, res) => {
+  res.render("login", {user: null});
+});
+
+
+//POST METHODS
 //adds shortURL
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
-});
-
-//redirect to longURL
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
 });
 
 //delete URLs
@@ -99,11 +104,6 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
-//registration page
-app.get("/register", (req, res) => {
-  res.render("register", {user: null});
-});
-
 //new register
 app.post("/register", (req, res) => {
   const password = req.body.password;
@@ -123,11 +123,6 @@ app.post("/register", (req, res) => {
   const newUser = {id, email, password};
   users[id] = newUser;
   res.redirect("/urls");
-});
-
-//log in
-app.get("/login", (req, res) => {
-  res.render("login", {user: null});
 });
 
 //log in
