@@ -19,10 +19,7 @@ const checkPassword = function(user, password) {
   return user.password === password
 };
 
-
-
-//filter the entire list in the urlDatabase by comparing the userID with the logged-in user's ID
-
+//returns url:{longurl, userID}
 const urlsForUsers = function(id, urlDatabase) {
   const urls = {};
   for(let key in urlDatabase) {
@@ -31,14 +28,7 @@ const urlsForUsers = function(id, urlDatabase) {
     }
   }
   return urls;
-}
-
-// {
-//   b6UTxQ: { //shortURL
-//       longURL: "https://www.tsn.ca",
-//       userID: "aJ48lW"
-//   },
-// };
+};
 
 module.exports = { 
   getUserByEmail,
