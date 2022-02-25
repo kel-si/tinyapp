@@ -48,7 +48,7 @@ app.get("/urls", (req, res) => {
   const templateVars = {user, urls};
  
   if(!userId) {
-    return res.redirect("/redirect");
+    return res.redirect("/login");
   }
   
   res.render("urls_index", templateVars);
