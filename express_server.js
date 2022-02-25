@@ -1,4 +1,4 @@
-const {getUserByEmail, checkPassword, generateRandomString} = require("./helpers");
+const {getUserByEmail, checkPassword, generateRandomString, urlsForUsers} = require("./helpers");
 const { redirect, res } = require("express/lib/response");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
@@ -15,19 +15,19 @@ app.use(cookieParser());
 //DATABASES:
 
 const urlDatabase = {
-  b6UTxQ: {
+  b6UTxQ: { //shortURL
       longURL: "https://www.tsn.ca",
       userID: "aJ48lW"
   },
   i3BoGr: {
       longURL: "https://www.google.ca",
-      userID: "aJ48lW"
+      userID: "user2RandomID"
   }
 };
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
+  "aJ48lW": {
+    id: "aJ48lW",
     email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
@@ -44,8 +44,9 @@ const users = {
 app.get("/urls", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
-  const templateVars = {user, urls: urlDatabase};
-
+  const urls = urlsForUsers(userId, urlDatabase);
+  const templateVars = {user, urls};
+ 
   if(!userId) {
     return res.redirect("/redirect");
   }
@@ -70,6 +71,11 @@ app.get("/urls/:shortURL", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
   const templateVars = {user, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL};
+
+  if(!userId) {
+    return res.redirect("/redirect");
+  }
+
   res.render("urls_show", templateVars);
 });
 
@@ -104,7 +110,6 @@ app.post("/urls", (req, res) => {
 
 //delete URLs
 app.post("/urls/:shortURL/delete", (req, res) => {
-  console.log("Hello")
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
   res.redirect("/urls");
