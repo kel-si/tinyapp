@@ -31,7 +31,7 @@ const users = {
   "aJ48lW": {
     id: "aJ48lW",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "$2a$10$mmJlbIJsRNKSF8I9PYuls.CBKOdltHRvESk8VRUAfQ/Yb6WwkaYj6"
   },
   "user2RandomID": {
     id: "user2RandomID",
@@ -164,7 +164,6 @@ app.post("/logout", (req, res) => {
 //new register
 app.post("/register", (req, res) => {
   const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);
   const email = req.body.email;
 
   if(!email || !password) {
@@ -176,10 +175,12 @@ app.post("/register", (req, res) => {
   }
 
   const id = generateRandomString();
-  res.cookie("user_id", id);
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const newUser = {id, email, password: hashedPassword};
 
-  const newUser = {id, email, password};
   users[id] = newUser;
+
+  res.cookie("user_id", id);
   res.redirect("/urls");
 });
 
@@ -188,10 +189,14 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
   const user = getUserByEmail(users, email);
-
-  if (!user || !checkPassword(user, password)) {
+  
+  // if (!user || !checkPassword(user, password)) {
+  //   return res.status(403).send("Email or password cannot be found.")
+  // };
+  console.log("user", user);
+  if(!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(403).send("Email or password cannot be found.")
-  };
+  }
   
   res.cookie("user_id", user.id);
   res.redirect("/urls");
