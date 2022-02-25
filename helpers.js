@@ -6,10 +6,10 @@ const generateRandomString = function() {
   return randomKey;
 };
 
-const getUserByEmail = function (obj, email) {
-  for(let key in obj) {
-    if (obj[key].email === email) {
-      return obj[key];
+const getUserByEmail = function (database, email) {
+  for(let key in database) {
+    if (database[key].email === email) {
+      return database[key];
     }
   }
   return null;
@@ -19,7 +19,7 @@ const checkPassword = function(user, password) {
   return user.password === password
 };
 
-//returns url:{longurl, userID}
+//returns shortURL:{longurl, userID}
 const urlsForUsers = function(id, urlDatabase) {
   const urls = {};
   for(let key in urlDatabase) {

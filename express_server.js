@@ -1,8 +1,10 @@
 const {getUserByEmail, checkPassword, generateRandomString, urlsForUsers} = require("./helpers");
+
 const { redirect, res } = require("express/lib/response");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const express = require("express");
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = 8080;
@@ -67,16 +69,28 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
+
 app.get("/urls/:shortURL", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
-  const templateVars = {user, shortURL: req.params, longURL: urlDatabase[req.params].longURL};
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL].longURL;
+  const templateVars = {user, shortURL, longURL};
   res.render("urls_show", templateVars);
 });
 
 //redirect to longURL
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
+  const shortURL = req.params.shortURL;
+  console.log("short url", shortURL);
+  const url = urlDatabase[shortURL];
+
+  if (!url) {
+    return res.status(400).send("This URL does not exist.")
+  }
+  const longURL = urlDatabase[shortURL].longURL;
+  // console.log("longurl", longURL);
+  console.log(url);
   res.redirect(longURL);
 });
 
@@ -104,13 +118,23 @@ app.post("/urls", (req, res) => {
 });
 
 //delete URLs
+//curl -X POST --cookie "user_id=zxnik2d" -i localhost:8080/urls/b6UTxQ/delete
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   const userId = req.cookies["user_id"];
   const user = users[userId];
 
+  console.log("req.cookies", req.cookies);
+
   if(!user) {
    return res.redirect("/login");
+  }
+
+  const ownedURLS = urlsForUsers(userId, urlDatabase);
+  console.log(ownedURLS);
+
+  if (!ownedURLS[shortURL]) {
+    return res.status(400).send("Error: cannot delete URL.")
   }
   delete urlDatabase[shortURL];
   res.redirect("/urls");
@@ -140,6 +164,7 @@ app.post("/logout", (req, res) => {
 //new register
 app.post("/register", (req, res) => {
   const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   const email = req.body.email;
 
   if(!email || !password) {
