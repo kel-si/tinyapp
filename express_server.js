@@ -85,14 +85,12 @@ app.get("/urls/:shortURL", (req, res) => {
 //redirect to longURL
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  console.log("short url", shortURL);
   const url = urlDatabase[shortURL];
 
   if (!url) {
     return res.status(400).send("This URL does not exist.");
   }
   const longURL = urlDatabase[shortURL].longURL;
-  console.log(url);
   res.redirect(longURL);
 });
 
@@ -131,7 +129,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   }
 
   const ownedURLS = urlsForUsers(userId, urlDatabase);
-  console.log(ownedURLS);
 
   if (!ownedURLS[shortURL]) {
     return res.status(400).send("Error: cannot delete URL.");
@@ -175,12 +172,12 @@ app.post("/register", (req, res) => {
   }
 
   const id = generateRandomString();
+  req.session.user_id = users.id;
   const hashedPassword = bcrypt.hashSync(password, 10);
-  const newUser = {id, email, password: hashedPassword};
 
+  const newUser = {id, email, password: hashedPassword};
   users[id] = newUser;
 
-  req.session.user_id = user.id;
   res.redirect("/urls");
 });
 
