@@ -7,7 +7,7 @@ const generateRandomString = function() {
 };
 
 const getUserByEmail = function (database, email) {
-  for(let key in database) {
+  for (let key in database) {
     if (database[key].email === email) {
       return database[key];
     }
@@ -16,21 +16,21 @@ const getUserByEmail = function (database, email) {
 };
 
 const checkPassword = function(user, password) {
-  return user.password === password
+  return user.password === password;
 };
 
 //returns shortURL:{longurl, userID}
 const urlsForUsers = function(id, urlDatabase) {
   const urls = {};
-  for(let key in urlDatabase) {
-    if(urlDatabase[key].userID === id) {
+  for (let key in urlDatabase) {
+    if (urlDatabase[key].userID === id) {
       urls[key] = urlDatabase[key];
     }
   }
   return urls;
 };
 
-module.exports = { 
+module.exports = {
   getUserByEmail,
   checkPassword,
   generateRandomString,
