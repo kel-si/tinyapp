@@ -8,9 +8,9 @@ This project was built in Week 3 of Lighthouse Labs' Web Development Bootcamp.
 
 ## Final Product
 
-[Homepage](#)
+[Homepage](https://github.com/kel-si/tinyapp/blob/main/docs/login-page.png)
 
-[Example of a URLs page](#)
+[Example of a URLs page](https://github.com/kel-si/tinyapp/blob/main/docs/urls-page.png)
 
 ## Dependencies
 
