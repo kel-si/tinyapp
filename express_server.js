@@ -18,12 +18,12 @@ app.use(cookieParser());
 
 const urlDatabase = {
   b6UTxQ: { //shortURL
-      longURL: "https://www.tsn.ca",
-      userID: "aJ48lW"
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW"
   },
   i3BoGr: {
-      longURL: "https://www.google.ca",
-      userID: "user2RandomID"
+    longURL: "https://www.google.ca",
+    userID: "user2RandomID"
   }
 };
 
@@ -49,27 +49,27 @@ app.get("/urls", (req, res) => {
   const urls = urlsForUsers(userId, urlDatabase);
   const templateVars = {user, urls};
  
-  if(!userId) {
+  if (!userId) {
     return res.redirect("/login");
   }
   
   res.render("urls_index", templateVars);
 });
 
-//to show the form
+//create new URL
 app.get("/urls/new", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
   const templateVars = {user};
 
-  if(!userId) {
+  if (!userId) {
     res.redirect("/login");
   }
 
   res.render("urls_new", templateVars);
 });
 
-
+//short URL page
 app.get("/urls/:shortURL", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
@@ -86,7 +86,7 @@ app.get("/u/:shortURL", (req, res) => {
   const url = urlDatabase[shortURL];
 
   if (!url) {
-    return res.status(400).send("This URL does not exist.")
+    return res.status(400).send("This URL does not exist.");
   }
   const longURL = urlDatabase[shortURL].longURL;
   // console.log("longurl", longURL);
@@ -110,6 +110,7 @@ app.get("/redirect", (req, res) => {
 
 
 //POST METHODS
+
 //adds shortURL
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
@@ -118,7 +119,6 @@ app.post("/urls", (req, res) => {
 });
 
 //delete URLs
-//curl -X POST --cookie "user_id=zxnik2d" -i localhost:8080/urls/b6UTxQ/delete
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   const userId = req.cookies["user_id"];
@@ -126,15 +126,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
   console.log("req.cookies", req.cookies);
 
-  if(!user) {
-   return res.redirect("/login");
+  if (!user) {
+    return res.redirect("/login");
   }
 
   const ownedURLS = urlsForUsers(userId, urlDatabase);
   console.log(ownedURLS);
 
   if (!ownedURLS[shortURL]) {
-    return res.status(400).send("Error: cannot delete URL.")
+    return res.status(400).send("Error: cannot delete URL.");
   }
   delete urlDatabase[shortURL];
   res.redirect("/urls");
@@ -147,9 +147,9 @@ app.post("/urls/:id", (req, res) => {
   const userId = req.cookies["user_id"];
   const user = users[userId];
 
-  if(!user) {
+  if (!user) {
     return res.redirect("/login");
-   }
+  }
   urlDatabase[shortURL].longURL = longURL;
 
   res.redirect("/urls");
@@ -166,11 +166,11 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
 
-  if(!email || !password) {
+  if (!email || !password) {
     return res.status(400).send("Must input email and password.");
   }
 
-  if(getUserByEmail(users, email)) {
+  if (getUserByEmail(users, email)) {
     return res.status(400).send("Email already registered.");
   }
 
@@ -189,13 +189,9 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
   const user = getUserByEmail(users, email);
-  
-  // if (!user || !checkPassword(user, password)) {
-  //   return res.status(403).send("Email or password cannot be found.")
-  // };
-  console.log("user", user);
-  if(!user || !bcrypt.compareSync(password, user.password)) {
-    return res.status(403).send("Email or password cannot be found.")
+
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    return res.status(403).send("Email or password cannot be found.");
   }
   
   res.cookie("user_id", user.id);
